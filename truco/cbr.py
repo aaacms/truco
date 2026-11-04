@@ -14,7 +14,9 @@ class Cbr():
 
     def carregar_dataset(self):
         """Carrega o dataset, caso necessário"""
-        df = pd.read_csv('dbtrucoimitacao_maos.csv', index_col='idMao').fillna(-100)
+        df = pd.read_csv(
+            'dbtrucoimitacao_maos.csv', sep=None, engine='python', index_col='idMao'
+        ).fillna(-100)
         df.replace('ESPADAS', '1', inplace=True)
         df.replace('OURO', '2', inplace=True)
         df.replace('BASTOS', '3', inplace=True)
