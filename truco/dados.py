@@ -9,15 +9,7 @@ class Dados():
 
     def tratamento_inicial_df(self):
         """Tratamento de dados do dataframe que será utilizado para alimentar a base de casos"""
-        # ``sep=None`` detecta automaticamente CSV (vírgula) e TSV (tabulação).
-        # Isso evita falha caso a base seja aberta e salva por uma planilha.
-        df = pd.read_csv(
-            'dbtrucoimitacao_maos.csv',
-            sep=None,
-            engine='python',
-            usecols=self.colunas,
-            index_col='idMao',
-        ).fillna(-100)
+        df = pd.read_csv('dbtrucoimitacao_maos.csv', usecols=self.colunas, index_col='idMao').fillna(-100)
         colunas_string = [
             'naipeCartaAltaRobo', 'naipeCartaMediaRobo','naipeCartaBaixaRobo', 'naipeCartaAltaHumano','naipeCartaMediaHumano', 'naipeCartaBaixaHumano','naipePrimeiraCartaRobo', 'naipePrimeiraCartaHumano',	'naipeSegundaCartaRobo', 'naipeSegundaCartaHumano','naipeTerceiraCartaRobo', 'naipeTerceiraCartaHumano',
             ]
