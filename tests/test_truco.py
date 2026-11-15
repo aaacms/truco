@@ -1,16 +1,9 @@
-"""Truco (truco.py) — cenários principais: TRU-01, 02, 03, 04, 06, 09 e 17.
-
-O humano é o jogador 1 (quem_pediu=1) e o bot responde por avaliar_truco
-(0 = recusar, 1 = aceitar, 2 = aumentar). O bot é sempre um stub roteirizado,
-sem CBR real. Entradas do humano (quando quem_pediu=2) via monkeypatch.
-"""
 import pytest
 
 from truco.truco import Truco
 
 
 class JogadorFalso:
-    """Stub: devolve as respostas roteirizadas em avaliar_truco."""
 
     def __init__(self, respostas=()):
         self.pontos = 0
@@ -28,7 +21,7 @@ def truco():
 
 @pytest.fixture
 def entradas(monkeypatch):
-    """entradas('1', '0') -> próximos input() devolvem '1', '0'."""
+    # entradas('1', '0'), próximos input() devolve 1, 0.
 
     def _definir(*valores):
         fila = list(valores)
@@ -42,7 +35,7 @@ def humano_e_bot(*respostas_bot):
     return JogadorFalso(), JogadorFalso(respostas_bot)
 
 
-# TRU-01 — RF-23: estado inicial
+# estado inicial
 @pytest.mark.ret
 def test_tru01_estado_inicial(truco):
     assert truco.valor_aposta == 1
@@ -50,7 +43,7 @@ def test_tru01_estado_inicial(truco):
     assert truco.jogador_bloqueado == 0
 
 
-# TRU-02 — RF-20/23: truco aceito deve valer 2
+# truco aceito deve valer 2
 @pytest.mark.req
 @pytest.mark.ret
 @pytest.mark.xfail(strict=True, reason="DEF-04: valor da mão não sobe para 2 no truco aceito")
@@ -61,7 +54,7 @@ def test_tru02_truco_aceito_vale_dois(truco):
     assert truco.retornar_valor_aposta() == 2
 
 
-# TRU-03 — RF-22: truco recusado dá 1 ponto a quem cantou
+# truco recusado dá 1 ponto a quem cantou
 @pytest.mark.req
 @pytest.mark.ret
 def test_tru03_truco_recusado(truco):
@@ -70,7 +63,7 @@ def test_tru03_truco_recusado(truco):
     assert (j1.pontos, j2.pontos) == (1, 0)
 
 
-# TRU-04 — RF-20/23: bot aumenta, humano aceita o Retruco
+# bot aumenta, humano aceita o Retruco
 @pytest.mark.req
 def test_tru04_retruco_aceito(truco, entradas):
     entradas("1")
@@ -80,7 +73,7 @@ def test_tru04_retruco_aceito(truco, entradas):
     assert truco.estado_atual == "retruco"
 
 
-# TRU-06 — RF-20: escalada completa até o Vale 4 aceito
+#  até o Vale 4 aceito
 @pytest.mark.req
 def test_tru06_vale_quatro_aceito(truco, entradas):
     entradas("2")
@@ -90,7 +83,7 @@ def test_tru06_vale_quatro_aceito(truco, entradas):
     assert j1.pediu_truco is True and j2.pediu_truco is True
 
 
-# TRU-09 — RF-21: depois do Vale 4 não pode haver novo canto
+# depois do Vale 4 não pode haver novo canto
 @pytest.mark.req
 @pytest.mark.ifs
 @pytest.mark.xfail(strict=True, reason="DEF-05: pedir_vale_quatro não grava estado vale_quatro")
@@ -103,7 +96,7 @@ def test_tru09_depois_do_vale_quatro_nao_ha_novo_canto(truco, monkeypatch, entra
     assert truco.valor_aposta == 4
 
 
-# TRU-17 — RF-20/21: tabela de decisão de controlador_truco
+# tabela de decisão de controlador_truco
 _DEFEITO_RETRUCO = pytest.mark.xfail(
     strict=True, reason="chama pedir_retruco no estado retruco em vez de pedir_vale_quatro (DEF-34 proposto)"
 )

@@ -1,4 +1,3 @@
-"""Regras de rodada (jogo.py) — cenários JOG-01 a JOG-10."""
 import pathlib
 
 import pytest
@@ -19,7 +18,7 @@ def jogadores():
     return Jogador("A"), Jogador("B")
 
 
-# JOG-01 — RF-11
+
 @pytest.mark.req
 @pytest.mark.call
 @pytest.mark.ret
@@ -43,7 +42,7 @@ def test_jog01_carta_vencedora(jogo, mk, a, b, vencedora):
     assert jogo.verificar_carta_vencedora(cb, ca) is esperada
 
 
-# JOG-02 — RF-12 (parda)
+# (parda)
 @pytest.mark.req
 @pytest.mark.ret
 @pytest.mark.xfail(strict=True, reason="DEF-03: parda não existe, devolve a 1ª carta")
@@ -53,7 +52,7 @@ def test_jog02_empate_vira_parda(jogo, mk, a, b):
     assert resultado is None or resultado == "Empate"
 
 
-# JOG-03 — RF-04
+# verifica ganhador
 @pytest.mark.ret
 @pytest.mark.msg
 def test_jog03_verificar_ganhador_devolve_e_imprime(jogo, mk, capsys):
@@ -62,7 +61,7 @@ def test_jog03_verificar_ganhador_devolve_e_imprime(jogo, mk, capsys):
     assert "Carta ganhadora: 1 de ESPADAS" in capsys.readouterr().out
 
 
-# JOG-04 — RF-14
+# adiciona rodada
 @pytest.mark.ifs
 @pytest.mark.ret
 def test_jog04_adicionar_rodada(jogo, jogadores, mk):
@@ -79,7 +78,7 @@ def test_jog04_adicionar_rodada(jogo, jogadores, mk):
     assert (j1.rodadas, j2.rodadas) == (1, 1)
 
 
-# JOG-05 — RF-13
+# primeiro jogador
 @pytest.mark.ifs
 def test_jog05_quem_joga_primeiro(jogo, jogadores, mk):
     j1, j2 = jogadores
@@ -92,7 +91,6 @@ def test_jog05_quem_joga_primeiro(jogo, jogadores, mk):
     assert (j1.primeiro, j2.primeiro) == (False, True)
 
 
-# JOG-06 — RF-03
 @pytest.mark.ifs
 @pytest.mark.parametrize(
     "r1, r2, ultimo, primeiro_esperado",
@@ -111,7 +109,7 @@ def test_jog06_quem_inicia_rodada(jogo, jogadores, r1, r2, ultimo, primeiro_espe
     assert (j1.primeiro, j2.primeiro) == primeiro_esperado
 
 
-# JOG-07 — RF-15
+# fuga de jogador, mantem mao
 @pytest.mark.req
 @pytest.mark.msg
 def test_jog07_fuga_do_j2_mantem_j1_como_mao(jogo, jogadores, capsys):
@@ -121,6 +119,7 @@ def test_jog07_fuga_do_j2_mantem_j1_como_mao(jogo, jogadores, capsys):
     assert (j1.primeiro, j2.primeiro) == (True, False)
 
 
+# jogador fugiu, passou mao
 @pytest.mark.req
 @pytest.mark.xfail(strict=True, reason="DEF: jogador_fugiu sempre define j1 como mão")
 def test_jog07_fuga_do_j1_passa_a_mao_ao_j2(jogo, jogadores):
@@ -129,7 +128,7 @@ def test_jog07_fuga_do_j1_passa_a_mao_ao_j2(jogo, jogadores):
     assert (j1.primeiro, j2.primeiro) == (False, True)
 
 
-# JOG-08 — RF-02
+# baralho cheio
 @pytest.mark.call
 @pytest.mark.parametrize("criar", ["criar_jogador", "criar_bot"])
 def test_jog08_criar_com_baralho_cheio(jogo, criar):
@@ -140,6 +139,7 @@ def test_jog08_criar_com_baralho_cheio(jogo, criar):
     assert len(baralho.cartas) == 37
 
 
+# 2 cartas baralho
 @pytest.mark.exc
 @pytest.mark.parametrize("criar", ["criar_jogador", "criar_bot"])
 def test_jog08_criar_com_baralho_de_2_cartas(jogo, criar):
@@ -149,14 +149,14 @@ def test_jog08_criar_com_baralho_de_2_cartas(jogo, criar):
         getattr(jogo, criar)("X", baralho)
 
 
-# JOG-09
+# estado inicial
 @pytest.mark.ret
 def test_jog09_estado_inicial(jogo):
     assert jogo.rodadas == []
     assert jogo.trucoPontos == 1
 
 
-# JOG-10 — RF-03 (DEF-21)
+# alternar entre maos
 @pytest.mark.req
 @pytest.mark.xfail(strict=True, reason="DEF-21: __main__ nunca chama quem_inicia_rodada")
 def test_jog10_main_alterna_a_mao():

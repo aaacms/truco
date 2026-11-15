@@ -1,8 +1,3 @@
-"""Envido (envido.py) — cenários principais: ENV-01 a 07, 11 e 13.
-
-Humano = jogador 1; bot = jogador 2, com avaliar_envido roteirizado
-(0 = recusar, 1 = aceitar, 2 = Real, 3 = Falta). Sem CBR real.
-"""
 import pytest
 
 from truco.envido import Envido
@@ -53,14 +48,14 @@ def cantar(envido, interface, tipo, quem, j1, j2):
     return envido.controlador_envido(None, None, tipo, quem, j1, j2, interface)
 
 
-# ENV-01 — RF-31
+# testa estado
 @pytest.mark.ret
 def test_env01_estado_inicial(envido):
     assert envido.valor_envido == 2
     assert envido.estado_atual == 0
 
 
-# ENV-02 — RF-31/32: humano canta, bot aceita, humano tem mais pontos
+# humano vence o envido
 @pytest.mark.req
 @pytest.mark.msg
 def test_env02_humano_vence_envido(envido, interface):
@@ -71,7 +66,7 @@ def test_env02_humano_vence_envido(envido, interface):
     assert interface.vencedores == [1]
 
 
-# ENV-03 — RF-32: bot vence
+# bot vence envido
 @pytest.mark.req
 def test_env03_bot_vence_envido(envido, interface):
     j1, j2 = JogadorFalso(20), JogadorFalso(28, [1])
@@ -80,7 +75,7 @@ def test_env03_bot_vence_envido(envido, interface):
     assert interface.vencedores == [2]
 
 
-# ENV-04 — RF-32: empate vence o "mão"
+# empate vence o "mão"
 @pytest.mark.req
 @pytest.mark.call
 @pytest.mark.parametrize(
@@ -96,7 +91,7 @@ def test_env04_empate_vence_o_mao(envido, interface, mao):
     assert envido.quem_venceu_envido == mao
 
 
-# ENV-05 — RF-33: bot recusa, humano ganha 1 ponto e não há caixa de vencedor
+# bot recusa, humano ganha 1 ponto
 @pytest.mark.ifs
 @pytest.mark.ret
 def test_env05_bot_recusa(envido, interface):
@@ -107,7 +102,7 @@ def test_env05_bot_recusa(envido, interface):
     assert interface.vencedores == []
 
 
-# ENV-06 — RF-33: bot canta e o humano recusa
+# bot canta e o humano recusa
 @pytest.mark.input_
 def test_env06_humano_recusa_envido_do_bot(envido, interface, entradas):
     entradas("0")
@@ -117,7 +112,7 @@ def test_env06_humano_recusa_envido_do_bot(envido, interface, entradas):
     assert envido.quem_fugiu == 1
 
 
-# ENV-07 — RF-31: Real Envido direto aceito vale 3
+# Real Envido direto aceito vale 3
 @pytest.mark.req
 @pytest.mark.xfail(strict=True, reason="DEF-08: Real Envido direto vale 5")
 def test_env07_real_envido_direto_vale_tres(envido, interface):
@@ -126,7 +121,7 @@ def test_env07_real_envido_direto_vale_tres(envido, interface):
     assert j1.pontos == 3
 
 
-# ENV-11 — RF-34: Falta Envido vale 30 menos os pontos do líder (5 x 3 => 25)
+# Falta Envido vale 30 menos os pontos do líder (5 x 3 => 25)
 @pytest.mark.req
 @pytest.mark.call
 @pytest.mark.xfail(strict=True, reason="DEF-09: falta calculada sobre 12 e sobre o adversário")
@@ -136,7 +131,7 @@ def test_env11_falta_envido_vale_30_menos_lider(envido, interface):
     assert j1.pontos == 5 + 25
 
 
-# ENV-13 — RF-30: só um canto de envido por mão
+# só um canto de envido por mão
 @pytest.mark.ifs
 @pytest.mark.ret
 def test_env13_segundo_canto_ignorado(envido, interface):

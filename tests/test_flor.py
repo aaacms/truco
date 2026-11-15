@@ -1,8 +1,3 @@
-"""Flor (flor.py) — cenários principais: FLO-01 a 05 e 08.
-
-Usa jogadores reais com mãos montadas (a flor depende de `flor`, `pontos` e
-dos pontos de envido da mão). Interface falsa registra o vencedor exibido.
-"""
 import pytest
 
 from truco.flor import Flor
@@ -54,7 +49,7 @@ def sem_flor(mk):
     return jogador(mk, "Sem", ["1C", "4O", "3B"], False)
 
 
-# FLO-01 — RF-41: só o bot tem flor
+# só o bot tem flor
 @pytest.mark.req
 @pytest.mark.msg
 def test_flo01_so_o_bot_tem_flor(flor, interface, sem_flor, com_flor):
@@ -64,7 +59,7 @@ def test_flo01_so_o_bot_tem_flor(flor, interface, sem_flor, com_flor):
     assert interface.vencedores == [2]
 
 
-# FLO-02 — RF-41: só o humano tem flor
+# só o humano tem flor
 @pytest.mark.req
 def test_flo02_so_o_humano_tem_flor(flor, interface, com_flor, sem_flor):
     flor.pedir_flor(1, com_flor, sem_flor, interface)
@@ -72,7 +67,7 @@ def test_flo02_so_o_humano_tem_flor(flor, interface, com_flor, sem_flor):
     assert flor.quem_venceu_flor == 1
 
 
-# FLO-03 — RF-40: ninguém tem flor, nada de pontos nem caixa de vencedor
+# ninguém tem flor
 @pytest.mark.req
 @pytest.mark.msg
 @pytest.mark.xfail(strict=True, reason="DEF-23: imprime vencedor mesmo sem flor")
@@ -83,8 +78,7 @@ def test_flo03_ninguem_tem_flor(flor, interface, sem_flor, mk):
     assert interface.vencedores == []
 
 
-# FLO-04 — RF-42: contra-flor vence pelos pontos de FLOR (soma das 3 cartas)
-# humano 7E 6E 12E: envido 33, flor 33 | bot 7O 5O 3O: envido 32, flor 35 -> bot vence
+# contra-flor vence pelos pontos de FLOR 
 @pytest.mark.req
 @pytest.mark.xfail(strict=True, reason="DEF-12: compara pontos de envido, não de flor")
 def test_flo04_contraflor_vence_maior_flor(flor, interface, entradas, mk):
@@ -95,7 +89,7 @@ def test_flo04_contraflor_vence_maior_flor(flor, interface, entradas, mk):
     assert bot.pontos == 6 and humano.pontos == 0
 
 
-# FLO-05 — RF-42: recusa da contra-flor dá 3 pontos a quem cantou
+# recusa da contra-flor dá 3 pontos a quem cantou
 @pytest.mark.req
 @pytest.mark.xfail(strict=True, reason="DEF-11: recusa dá 4 pontos ao bot")
 def test_flo05_recusa_da_contraflor(flor, interface, entradas, mk):
@@ -106,7 +100,7 @@ def test_flo05_recusa_da_contraflor(flor, interface, entradas, mk):
     assert humano.pontos == 3 and bot.pontos == 0
 
 
-# FLO-08 — RF-41: segundo pedido de flor na mesma mão é ignorado
+# segundo pedido de flor na mesma mão é ignorado
 @pytest.mark.ifs
 def test_flo08_segundo_pedido_ignorado(flor, interface, com_flor, sem_flor):
     flor.pedir_flor(1, com_flor, sem_flor, interface)
