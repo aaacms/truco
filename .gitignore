@@ -3,3 +3,4 @@
 .venv/
 .~lock.dbtrucoimitacao_maos.csv#
 jogadas.csv
+.pytest_cache/
